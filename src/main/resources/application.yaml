@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/trainingDb
+    url: jdbc:mysql://localhost:3306/api
     username: root
-    password:
+    password: 
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
@@ -13,12 +13,29 @@ spring:
         format_sql: true
     database: mysql
     database-platform: org.hibernate.dialect.MySQL8Dialect
-
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ramdanisalah67@gmail.com
+    password: xnedhmkajkavnsky
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 server:
-  port: 8081
-logging:
-  level:
-    org:
-      springframework:
-        security: DEBUG
+  port: 8080
+  #ssl:
+   # enabled: true
+   # key-store-type: PKCS12
+   # key-store: classpath:server.p12
+   # key-store-password: 111111
+   # key-alias: tomcat
+
+
+admin:
+
+  password: null
+

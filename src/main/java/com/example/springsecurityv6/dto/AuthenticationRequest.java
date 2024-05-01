@@ -1,4 +1,4 @@
-package com.example.springsecurityv6.Models;
+package com.example.springsecurityv6.dto;
 
 
 import lombok.AllArgsConstructor;
@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AuthenticationRequest {
-    private String username;
+    private String email;
     private String password ;
 }

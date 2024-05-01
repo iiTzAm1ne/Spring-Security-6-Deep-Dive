@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -30,6 +31,7 @@ public class SecurityConfig  {
 
     private final MyCustomFilter myCustomFilter;
     private final UserDetailsServiceImpl userDetailsService;
+    private final myLogoutHandler logoutHandler;
 
 
     //private  final CustomAuthenticationProvider customAutheticationProvider;
@@ -60,10 +62,23 @@ public class SecurityConfig  {
                 .authorizeHttpRequests(auth->{
                     auth.requestMatchers("api/home/welcome").hasAuthority("USER");
                     auth.requestMatchers("api/home/products").hasRole("ADMIN");
+                    auth.requestMatchers("api/test/user").hasAuthority("USER");
+                    auth.requestMatchers("api/test/admin").hasAuthority("ADMIN");
+                    auth.requestMatchers("api/test/all").permitAll();
+                    auth.requestMatchers("api/recruite/**").hasAuthority("HR");
                     auth.requestMatchers("auth").permitAll();
+                    auth.requestMatchers("api/addoffer").permitAll();
+                    auth.requestMatchers("api/offers").permitAll();
+                    auth.requestMatchers("api/deleteoffer").permitAll();
+                    auth.requestMatchers("api/deleteoffer/**").permitAll();
+                    auth.requestMatchers("verifyEmail").permitAll();
+                    auth.requestMatchers("forget-password").permitAll();
+                    auth.requestMatchers("new-password").permitAll();
+                    auth.requestMatchers("verify-code").permitAll();
                     auth.requestMatchers("register").permitAll();
-
-                    auth.anyRequest().authenticated();
+                    auth.requestMatchers("api/manage/**").hasAuthority("ADMIN");
+                    auth.requestMatchers("api/test/print").hasAuthority("USER");
+               /*any request out of previous is need to be authenticated*/     auth.anyRequest().authenticated();
 
                 })
                 .userDetailsService(userDetailsService)
@@ -71,6 +86,19 @@ public class SecurityConfig  {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(myCustomFilter, UsernamePasswordAuthenticationFilter.class)
                // .authenticationProvider(customAutheticationProvider)
+
+                .logout(logout -> {
+                    logout
+                            .addLogoutHandler(logoutHandler)
+                            .logoutUrl("/api/logout")
+                            .logoutSuccessHandler(((request, response, authentication) -> {
+                                SecurityContextHolder.clearContext();
+                            }));
+
+
+
+                })
+
 
                 .build();
 

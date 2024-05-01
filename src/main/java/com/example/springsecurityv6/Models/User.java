@@ -9,10 +9,12 @@ import org.hibernate.annotations.Type;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Indexed;
 
 import java.time.Instant;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 @Entity
 @Data
@@ -23,17 +25,27 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id ;
-    @Column(unique = true)
-    private String username;
+    private int age ;
+    private String fullName;
     private String password ;
     private String email ;
     private Instant createdAt;
-    private String roles ;
+    private String roles="USER" ;
+    private boolean account_state ;
 
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.PERSIST, mappedBy = "user",fetch = FetchType.LAZY)
+
+    private List<Token> tokens ;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singleton(new SimpleGrantedAuthority(this.roles));
     }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
 
     @Override
     public boolean isAccountNonExpired() {
@@ -52,6 +64,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return account_state;
     }
+
 }

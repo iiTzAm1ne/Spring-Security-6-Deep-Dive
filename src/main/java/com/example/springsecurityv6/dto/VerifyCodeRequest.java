@@ -1,4 +1,4 @@
-package com.example.springsecurityv6.Models;
+package com.example.springsecurityv6.dto;
 
 
 import lombok.AllArgsConstructor;
@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Message {
-    private String Content ;
+public class VerifyCodeRequest {
+    String Code ;
+    String email ;
 }
